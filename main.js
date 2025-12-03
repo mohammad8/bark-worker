@@ -153,7 +153,7 @@ async function handleRequest(request, env, ctx) {
                         if (requestBody.device_keys.startsWith('[') || requestBody.device_keys.endsWith(']')) {
                             requestBody.device_keys = JSON.parse(requestBody.device_keys)
                         } else {
-                            requestBody.device_keys = (decodeURIComponent(requestBody.device_keys).trim()).split(',').map(item => item.replace(/'/g, '').trim())
+                            requestBody.device_keys = (decodeURIComponent(requestBody.device_keys).trim()).split(',').map(item => item.replace(/['"]/g, '').trim())
                         }
 
                         if (typeof requestBody.device_keys === 'string') {
@@ -249,9 +249,9 @@ async function handleRequest(request, env, ctx) {
 class Handler {
     constructor(db, options) {
         this.version = 'v2.2.6'
-        this.build = '2025-10-25 21:09:29'
+        this.build = '2025-12-03 10:47:17'
         this.arch = 'js'
-        this.commit = 'a5d5365ad2dc362858b39044f05da9e10d3538cf'
+        this.commit = '86fa3cbea263776c2cda237b2ccf7cf0c5af810f'
         this.allowNewDevice = options.allowNewDevice
         this.allowQueryNums = options.allowQueryNums
         

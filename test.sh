@@ -213,11 +213,12 @@ curl -X "POST" "$SERVER_ADDRESS/push" \
   "group": "testBatchPush",
   "url": "https://mritd.com",
   "isArchive": "0",
-  "device_keys": ",,"
+  "device_keys": ",,'',\"\""
 }'
 
 echo ""
 
+# Invalid JSON
 curl -X "POST" "$SERVER_ADDRESS/push" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -225,7 +226,20 @@ curl -X "POST" "$SERVER_ADDRESS/push" \
   "group": "testBatchPush",
   "url": "https://mritd.com",
   "isArchive": "0",
-  "device_keys": []
+  "device_keys": ['', ,]
+}'
+
+echo ""
+
+# Empty Array
+curl -X "POST" "$SERVER_ADDRESS/push" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "body": "Test Batch Message In Body",
+  "group": "testBatchPush",
+  "url": "https://mritd.com",
+  "isArchive": "0",
+  "device_keys": ["", "", ""]
 }'
 
 echo ""
