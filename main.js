@@ -13,19 +13,19 @@ async function handleRequest(request, env, ctx) {
     const db = new Database(env)
     const {searchParams, pathname} = new URL(request.url)
     const handler = new Handler(db, { allowNewDevice, allowQueryNums })
-    const realPathname = pathname.replace((new RegExp('^' + rootPath.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"))), '/')
+    const realPathname = pathname.replace((new RegExp('^' + rootPath.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'))), '/')
 
     switch (realPathname) {
-        case "/register": {
+        case '/register': {
             return handler.register(searchParams)
         }
-        case "/ping": {
+        case '/ping': {
             return handler.ping(searchParams)
         }
-        case "/healthz": {
+        case '/healthz': {
             return handler.healthz(searchParams)
         }
-        case "/info": {
+        case '/info': {
             if (!util.validateBasicAuth(request, basicAuth)) {
                 return new Response('Unauthorized', {
                     status: 401,
@@ -68,19 +68,19 @@ async function handleRequest(request, env, ctx) {
 
                         try {
                             if (requestBody.title) {
-                                requestBody.title = decodeURIComponent(requestBody.title.replaceAll("\\+","%20"))
+                                requestBody.title = decodeURIComponent(requestBody.title.replaceAll('\\+', '%20'))
                             }
                             
                             if (requestBody.subtitle) {
-                                requestBody.subtitle = decodeURIComponent(requestBody.subtitle.replaceAll("\\+","%20"))
+                                requestBody.subtitle = decodeURIComponent(requestBody.subtitle.replaceAll('\\+', '%20'))
                             }
                             
                             if (requestBody.body) {
-                                requestBody.body = decodeURIComponent(requestBody.body.replaceAll("\\+","%20"))
+                                requestBody.body = decodeURIComponent(requestBody.body.replaceAll('\\+', '%20'))
                             }
 
                             if (requestBody.markdown) {
-                                requestBody.markdown = decodeURIComponent(requestBody.markdown.replaceAll("\\+","%20"))
+                                requestBody.markdown = decodeURIComponent(requestBody.markdown.replaceAll('\\+', '%20'))
                             }
                         } catch (error) {
                             return new Response(JSON.stringify({
@@ -121,19 +121,19 @@ async function handleRequest(request, env, ctx) {
 
                         try {
                             if (requestBody.title) {
-                                requestBody.title = decodeURIComponent(requestBody.title.replaceAll("\\+","%20"))
+                                requestBody.title = decodeURIComponent(requestBody.title.replaceAll('\\+','%20'))
                             }
                             
                             if (requestBody.subtitle) {
-                                requestBody.subtitle = decodeURIComponent(requestBody.subtitle.replaceAll("\\+","%20"))
+                                requestBody.subtitle = decodeURIComponent(requestBody.subtitle.replaceAll('\\+','%20'))
                             }
                             
                             if (requestBody.body) {
-                                requestBody.body = decodeURIComponent(requestBody.body.replaceAll("\\+","%20"))
+                                requestBody.body = decodeURIComponent(requestBody.body.replaceAll('\\+','%20'))
                             }
 
                             if (requestBody.markdown) {
-                                requestBody.markdown = decodeURIComponent(requestBody.markdown.replaceAll("\\+","%20"))
+                                requestBody.markdown = decodeURIComponent(requestBody.markdown.replaceAll('\\+','%20'))
                             }
                         } catch (error) {
                             return new Response(JSON.stringify({
@@ -153,7 +153,7 @@ async function handleRequest(request, env, ctx) {
                         if (requestBody.device_keys.startsWith('[') || requestBody.device_keys.endsWith(']')) {
                             requestBody.device_keys = JSON.parse(requestBody.device_keys)
                         } else {
-                            requestBody.device_keys = (decodeURIComponent(requestBody.device_keys).trim()).split(',').map(item => item.replace(/"/g, '').trim())
+                            requestBody.device_keys = (decodeURIComponent(requestBody.device_keys).trim()).split(',').map(item => item.replace(/'/g, '').trim())
                         }
 
                         if (typeof requestBody.device_keys === 'string') {
@@ -224,7 +224,7 @@ async function handleRequest(request, env, ctx) {
             }
 
             if (realPathname === '/') {
-                return new Response("ok", {
+                return new Response('ok', {
                     status: 200,
                     headers: {
                         'content-type': 'text/plain',
@@ -248,10 +248,10 @@ async function handleRequest(request, env, ctx) {
 
 class Handler {
     constructor(db, options) {
-        this.version = "v2.2.6"
-        this.build = "2025-10-25 21:09:29"
-        this.arch = "js"
-        this.commit = "a5d5365ad2dc362858b39044f05da9e10d3538cf"
+        this.version = 'v2.2.6'
+        this.build = '2025-10-25 21:09:29'
+        this.arch = 'js'
+        this.commit = 'a5d5365ad2dc362858b39044f05da9e10d3538cf'
         this.allowNewDevice = options.allowNewDevice
         this.allowQueryNums = options.allowQueryNums
         
@@ -334,7 +334,7 @@ class Handler {
         }
 
         this.healthz = async (parameters) => {
-            return new Response("ok", {
+            return new Response('ok', {
                 status: 200,
                 headers: {
                     'content-type': 'text/plain',
@@ -603,7 +603,7 @@ class APNs {
                     'apns-id': headers['apns-id'] || undefined,
                     'apns-collapse-id': headers['apns-collapse-id'] || undefined,
                     'apns-priority': (headers['apns-priority'] > 0) ? headers['apns-priority'] : undefined,
-                    'apns-expiration': util.getTimestamp() + 86400,
+                    'apns-expiration': headers['apns-expiration'] || util.getTimestamp() + 86400,
                     'apns-push-type': headers['apns-push-type'] || 'alert',
                     'authorization': `bearer ${AUTHENTICATION_TOKEN}`,
                     'content-type': 'application/json',
@@ -625,7 +625,7 @@ class Database {
             const query = 'SELECT COUNT(*) as rowCount FROM `devices`'
             const result = await db.prepare(query).run()
             
-            return (result.results[0] || {"rowCount": -1}).rowCount
+            return (result.results[0] || {'rowCount': -1}).rowCount
         }
 
         this.deviceTokenByKey = async (key) => {
@@ -633,7 +633,7 @@ class Database {
             const query = 'SELECT `token` FROM `devices` WHERE `key` = ?'
             const result = await db.prepare(query).bind(device_key).run()
 
-            return (result.results[0] || {"token": undefined}).token
+            return (result.results[0] || {'token': undefined}).token
         }
 
         this.saveDeviceTokenByKey = async (key, token) => {
