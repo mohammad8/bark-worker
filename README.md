@@ -49,7 +49,7 @@ Bark-Worker is a [Bark-Server](https://github.com/Finb/bark-server) implenmentio
 > [!NOTE]
 > The Cloudflare API Token must have D1 permission.
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cwxiaos/bark-worker)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mohammad8/bark-worker)
 
 ### Or manually deploy
 
